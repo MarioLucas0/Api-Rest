@@ -13,19 +13,19 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "editora")
 public class Editora {
-
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "codigoeditora")
 	private Integer codigoEditora;
+
 	@Column(name = "nome")
 	private String nome;
 
-	@OneToMany(mappedBy = "codigoEditora")
+	@OneToMany(mappedBy = "editora")
 	private Set<Livro> livros;
 
 	public Integer getCodigoEditora() {
-		return this.codigoEditora;
+		return codigoEditora;
 	}
 
 	public void setCodigoEditora(Integer codigoEditora) {
@@ -33,7 +33,7 @@ public class Editora {
 	}
 
 	public String getNome() {
-		return this.nome;
+		return nome;
 	}
 
 	public void setNome(String nome) {
@@ -41,7 +41,7 @@ public class Editora {
 	}
 
 	public Set<Livro> getLivros() {
-		return this.livros;
+		return livros;
 	}
 
 	public void setLivros(Set<Livro> livros) {

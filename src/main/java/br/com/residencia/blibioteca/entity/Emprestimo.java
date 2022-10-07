@@ -33,7 +33,7 @@ public class Emprestimo {
 
 	@ManyToOne
 	@JoinColumn(name = "numeromatriculaaluno", referencedColumnName = "numeromatriculaaluno")
-	private Alunos aluno;
+	private Aluno aluno;
 
 	@OneToOne
 	@JoinColumn(name = "codigolivro", referencedColumnName = "codigolivro")
@@ -71,11 +71,11 @@ public class Emprestimo {
 		this.valorEmprestimo = valorEmprestimo;
 	}
 
-	public Alunos getAluno() {
+	public Aluno getAluno() {
 		return this.aluno;
 	}
 
-	public void setAluno(Alunos aluno) {
+	public void setAluno(Aluno aluno) {
 		this.aluno = aluno;
 	}
 
