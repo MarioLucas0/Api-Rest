@@ -1,5 +1,0 @@
-package br.com.residencia.blibioteca.entity;
-
-public class Emprestimo {
-
-}
