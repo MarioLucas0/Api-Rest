@@ -1,4 +1,4 @@
-package com.cinema.cinema;
+package br.com.residencia.cinema;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
