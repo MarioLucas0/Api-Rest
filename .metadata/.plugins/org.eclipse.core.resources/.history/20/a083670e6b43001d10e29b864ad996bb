@@ -1,0 +1,16 @@
+package br.com.residencia.blibioteca.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "editora")
+public class Editora {
+    
+	@Column(name = "codigoeditora")
+	private Integer codigoEditora;
+	private String nome;
+	
+	
+}

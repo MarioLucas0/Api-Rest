@@ -1,0 +1,9 @@
+package br.com.residencia.blibioteca.entity;
+
+import javax.persistence.Entity;
+
+@Entity
+@Table(name = "emprestimo")
+public class Emprestimo {
+
+}
