@@ -20,44 +20,44 @@ import br.com.residencia.cinema.services.DiretorService;
 @RestController
 @RequestMapping("/diretores")
 public class DiretorController {
-	
+
 	@Autowired
 	DiretorService diretorSerice;
-	
+
 	@GetMapping
-	public ResponseEntity <List<Diretor>> getAllDiretores(){
-		return new ResponseEntity<>(diretorSerice.getAllDiretores(),HttpStatus.OK);
-		
+	public ResponseEntity<List<Diretor>> getAllDiretores() {
+		return new ResponseEntity<>(diretorSerice.getAllDiretores(), HttpStatus.OK);
+
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<Diretor> gettDiretorById(@PathVariable Integer id){
+	public ResponseEntity<Diretor> gettDiretorById(@PathVariable Integer id) {
 		Diretor diretor = diretorSerice.getDiretorById(id);
-		if(diretor != null)
-			return new ResponseEntity<>(diretorSerice.getDiretorById(id),HttpStatus.OK);
+		if (diretor != null)
+			return new ResponseEntity<>(diretorSerice.getDiretorById(id), HttpStatus.OK);
 		else
-			return new ResponseEntity<>(diretorSerice.getDiretorById(id),HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(diretorSerice.getDiretorById(id), HttpStatus.NOT_FOUND);
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Diretor> saveDiretor(@RequestBody Diretor diretor){
-		return new ResponseEntity<>(diretorSerice.saveDiretor(diretor),HttpStatus.CREATED);
-	
+	public ResponseEntity<Diretor> saveDiretor(@RequestBody Diretor diretor) {
+		return new ResponseEntity<>(diretorSerice.saveDiretor(diretor), HttpStatus.CREATED);
+
 	}
-	
+
 	@PutMapping("/{id}")
-	public ResponseEntity<Diretor> updateDiretor(@RequestBody Diretor diretor ,@PathVariable Integer id){
-		return new ResponseEntity<>(diretorSerice.updateDiretor(diretor, id),HttpStatus.OK);
-		
+	public ResponseEntity<Diretor> updateDiretor(@RequestBody Diretor diretor, @PathVariable Integer id) {
+		return new ResponseEntity<>(diretorSerice.updateDiretor(diretor, id), HttpStatus.OK);
+
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Diretor> deleteDiretor(@PathVariable Integer id){
+	public ResponseEntity<Diretor> deleteDiretor(@PathVariable Integer id) {
 		Diretor diretor = diretorSerice.getDiretorById(id);
-		if(diretor == null)
-			return new ResponseEntity<>(diretor,HttpStatus.NOT_FOUND);
+		if (diretor == null)
+			return new ResponseEntity<>(diretor, HttpStatus.NOT_FOUND);
 		else
-			return new ResponseEntity<>(diretorSerice.deleteDiretor(id),HttpStatus.OK);
-		
+			return new ResponseEntity<>(diretorSerice.deleteDiretor(id), HttpStatus.OK);
+
 	}
 }
