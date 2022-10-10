@@ -24,9 +24,6 @@ public class Livro {
   @Column(name = "nomelivro")
   private String nomeLivro;
 
-  @Column(name = "nomeautorizado")
-  private String nomeAutor;
-
   @Column(name = "datalancamento")
   private Date dataLancamento;
 
@@ -54,14 +51,6 @@ public class Livro {
 
   public void setNomeLivro(String nomeLivro) {
     this.nomeLivro = nomeLivro;
-  }
-
-  public String getNomeAutor() {
-    return this.nomeAutor;
-  }
-
-  public void setNomeAutor(String nomeAutor) {
-    this.nomeAutor = nomeAutor;
   }
 
   public Date getDataLancamento() {

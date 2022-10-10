@@ -35,7 +35,6 @@ public class LivroService {
     livroExistenteNoBanco.setDataLancamento(livro.getDataLancamento());
     // livroExistenteNoBanco.setEditora(Editora);
     // livroExistenteNoBanco.setEmprestimo(Emprestimo);
-    livroExistenteNoBanco.setNomeAutor(livro.getNomeAutor());
     livroExistenteNoBanco.setNomeLivro(livro.getNomeLivro());
 
     return livroRepository.save(livroExistenteNoBanco);
