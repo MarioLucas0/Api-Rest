@@ -9,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -21,15 +19,19 @@ public class Genero {
 	@Column(name = "idgenero")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idGenero;
-	
-	@Column(name = "descricao",length = 100)
+
+	@Column(name = "descricao", length = 100)
 	private String descricao;
-	
-	//@JsonBackReference
+
+	/*
+	 * @JsonIdentityInfo( generator = ObjectIdGenerators.PropertyGenerator.class,
+	 * property = "genero")
+	 */
+	// @JsonManagedReference
 	@JsonIgnore
 	@OneToMany(mappedBy = "genero")
-	private List<Filme> filmes;	
-	
+	private List<Filme> filmes;
+
 	public List<Filme> getFilmes() {
 		return filmes;
 	}
@@ -53,6 +55,5 @@ public class Genero {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	
-	
+
 }

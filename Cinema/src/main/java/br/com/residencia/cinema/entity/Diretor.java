@@ -10,50 +10,47 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "Diretor")
+@Table(name = "diretor")
 public class Diretor {
 
-		@Id
-		@Column(name = "iddiretor",nullable = false)
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		private Integer idDiretor;
-		
-		@Column(name = "nomediretor",length = 100)
-		private String nomeDiretor;
+	@Id
+	@Column(name = "iddiretor", nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer idDiretor;
 
-		//@JsonBackReference
-		@JsonIgnore
-		@OneToMany(mappedBy = "diretor")
-		private List <Filme> filmes;
-		
-		
-		public List<Filme> getFilmes() {
-			return filmes;
-		}
+	@Column(name = "nomediretor", length = 100)
+	private String nomeDiretor;
 
-		public void setFilmes(List<Filme> filmes) {
-			this.filmes = filmes;
-		}
+	// @JsonManagedReference
+	@JsonIgnore
+	@OneToMany(mappedBy = "diretor")
+	private List<Filme> filmes;
 
-		public Integer getIdDiretor() {
-			return idDiretor;
-		}
+	public List<Filme> getFilmes() {
+		return filmes;
+	}
 
-		public void setIdDiretor(Integer idDiretor) {
-			this.idDiretor = idDiretor;
-		}
+	public void setFilmes(List<Filme> filmes) {
+		this.filmes = filmes;
+	}
 
-		public String getNomeDiretor() {
-			return nomeDiretor;
-		}
+	public Integer getIdDiretor() {
+		return idDiretor;
+	}
 
-		public void setNomeDiretor(String nomeDiretor) {
-			this.nomeDiretor = nomeDiretor;
-		}
-		
-		
+	public void setIdDiretor(Integer idDiretor) {
+		this.idDiretor = idDiretor;
+	}
+
+	public String getNomeDiretor() {
+		return nomeDiretor;
+	}
+
+	public void setNomeDiretor(String nomeDiretor) {
+		this.nomeDiretor = nomeDiretor;
+	}
+
 }

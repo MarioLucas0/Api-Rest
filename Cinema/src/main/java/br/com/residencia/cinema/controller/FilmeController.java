@@ -23,41 +23,41 @@ public class FilmeController {
 
 	@Autowired
 	FilmeService filmeService;
-	
+
 	@GetMapping
-	public ResponseEntity<List<Filme>> getAllFilmes(){
-		return new ResponseEntity<>(filmeService.getAllFilmes(),HttpStatus.OK);
-	
+	public ResponseEntity<List<Filme>> getAllFilmes() {
+		return new ResponseEntity<>(filmeService.getAllFilmes(), HttpStatus.OK);
+
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<Filme> getFilmeById(@PathVariable Integer id){
+	public ResponseEntity<Filme> getFilmeById(@PathVariable Integer id) {
 		Filme filme = filmeService.getFilmeById(id);
-		if(filme != null)
-			return new ResponseEntity<>(filme,HttpStatus.OK);
+		if (filme != null)
+			return new ResponseEntity<>(filme, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(filme,HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(filme, HttpStatus.NOT_FOUND);
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Filme> saveFilme(@RequestBody Filme filme){
-		return new ResponseEntity<>(filmeService.saveFilme(filme),HttpStatus.CREATED);
-	
+	public ResponseEntity<Filme> saveFilme(@RequestBody Filme filme) {
+		return new ResponseEntity<>(filmeService.saveFilme(filme), HttpStatus.CREATED);
+
 	}
-	
+
 	@PutMapping("/{id}")
-	public ResponseEntity<Filme> updateFilme(@RequestBody Filme filme,@PathVariable Integer id){
-		return new ResponseEntity<>(filmeService.updateFilme(filme, id),HttpStatus.OK);
-		
+	public ResponseEntity<Filme> updateFilme(@RequestBody Filme filme, @PathVariable Integer id) {
+		return new ResponseEntity<>(filmeService.updateFilme(filme, id), HttpStatus.OK);
+
 	}
-	
-	@DeleteMapping("/{id}") 
-	public ResponseEntity<Filme> deleteFilme(@PathVariable Integer id){
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Filme> deleteFilme(@PathVariable Integer id) {
 		Filme filme = filmeService.getFilmeById(id);
-		if(filme == null)
-			return new ResponseEntity<>(filme,HttpStatus.NOT_FOUND);
+		if (filme == null)
+			return new ResponseEntity<>(filme, HttpStatus.NOT_FOUND);
 		else
-			return new ResponseEntity<>(filmeService.deleteFilme(id),HttpStatus.OK);
-		
+			return new ResponseEntity<>(filmeService.deleteFilme(id), HttpStatus.OK);
+
 	}
 }

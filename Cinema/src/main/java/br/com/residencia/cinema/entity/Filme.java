@@ -1,7 +1,5 @@
 package br.com.residencia.cinema.entity;
 
-import java.sql.Timestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,36 +9,33 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity
 @Table(name = "Filme")
 public class Filme {
-	
+
 	@Id
 	@Column(name = "idfilme")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idFilme;
-	
-	@Column(name = "nomebr",length = 100)
+
+	@Column(name = "nomebr", length = 100)
 	private String nomeBr;
-	
-	@Column(name ="nomeen",length = 100)
+
+	@Column(name = "nomeen", length = 100)
 	private String nomeEn;
-	
-	@Column(name = "anolacamento",length = 4)
+
+	@Column(name = "anolacamento", length = 4)
 	private Integer anoLancamento;
-	
-	@Column(name = "sipnose",length = 200)
+
+	@Column(name = "sipnose", length = 200)
 	private String sipnose;
-	
-	//@JsonManagedReference
+
+	// @JsonBackReference
 	@ManyToOne
-	@JoinColumn(name = "iddiretor",referencedColumnName = "iddiretor")
+	@JoinColumn(name = "iddiretor", referencedColumnName = "iddiretor")
 	private Diretor diretor;
-	 
-	//@JsonManagedReference
+
+	// @JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "idgenero", referencedColumnName = "idgenero")
 	private Genero genero;
@@ -100,6 +95,5 @@ public class Filme {
 	public void setAnoLancamento(Integer anoLancamento) {
 		this.anoLancamento = anoLancamento;
 	}
-	
-	
+
 }

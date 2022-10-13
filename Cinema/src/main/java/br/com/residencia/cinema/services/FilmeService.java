@@ -13,23 +13,22 @@ public class FilmeService {
 
 	@Autowired
 	FilmeRepository filmeRepository;
-	
-	
-	public List<Filme> getAllFilmes(){
+
+	public List<Filme> getAllFilmes() {
 		return filmeRepository.findAll();
 	}
 
 	public Filme getFilmeById(Integer Id) {
 		return filmeRepository.findById(Id).orElse(null);
 	}
-	
-	public Filme saveFilme(Filme filme){
+
+	public Filme saveFilme(Filme filme) {
 		return filmeRepository.save(filme);
 	}
-	
-	public Filme updateFilme(Filme filme,Integer id) {
+
+	public Filme updateFilme(Filme filme, Integer id) {
 		Filme filmeExist = getFilmeById(id);
-		
+
 		filmeExist.setIdFilme(filme.getIdFilme());
 		filmeExist.setNomeBr(filme.getNomeBr());
 		filmeExist.setNomeEn(filme.getNomeEn());
@@ -37,13 +36,12 @@ public class FilmeService {
 		filmeExist.setAnoLancamento(filme.getAnoLancamento());
 		filmeExist.setDiretor(filme.getDiretor());
 		filmeExist.setGenero(filme.getGenero());
-		
+
 		return filmeRepository.save(filmeExist);
 	}
-	
+
 	public Filme deleteFilme(Integer id) {
 		filmeRepository.deleteById(id);
 		return getFilmeById(id);
 	}
 }
-
