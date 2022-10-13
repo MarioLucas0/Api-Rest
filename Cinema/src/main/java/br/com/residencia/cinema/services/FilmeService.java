@@ -27,7 +27,7 @@ public class FilmeService {
 	}
 
 	public Filme updateFilme(Filme filme, Integer id) {
-		Filme filmeExist = getFilmeById(id);
+		Filme filmeExist = filmeRepository.getReferenceById(id);
 
 		filmeExist.setIdFilme(filme.getIdFilme());
 		filmeExist.setNomeBr(filme.getNomeBr());
