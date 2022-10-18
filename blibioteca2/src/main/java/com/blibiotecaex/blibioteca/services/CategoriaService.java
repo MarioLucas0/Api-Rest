@@ -21,13 +21,11 @@ public class CategoriaService {
   public List<Categoria> getAllCategorias() {
     return categoriaRepository.findAll();
   }
-  /*
-   * }
-   * 
-   * public Autor getLivroById(Long id) {
-   * return autorRepository.findById(id).get();
-   * }
-   */
+
+  public Categoria getCategoriaById(Long id) {
+    return categoriaRepository.findById(id).get();
+
+  }
 
   @Transactional
   public CategoriaDTO insert(CategoriaDTO categoriaDto) {

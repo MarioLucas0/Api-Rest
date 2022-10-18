@@ -12,6 +12,9 @@ public class LivroDTO2 {
   private Long autorId;
   private Long categoriaId;
 
+  public LivroDTO2() {
+  }
+
   public LivroDTO2(Long id, String name, String isbn, Instant datapublicacao, Long autorId, Long categoriaId) {
     this.id = id;
     this.name = name;

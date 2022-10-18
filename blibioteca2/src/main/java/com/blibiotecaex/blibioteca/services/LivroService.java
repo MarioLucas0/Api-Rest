@@ -2,6 +2,7 @@ package com.blibiotecaex.blibioteca.services;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -16,6 +17,7 @@ import com.blibiotecaex.blibioteca.entities.Livro;
 import com.blibiotecaex.blibioteca.repository.AutorRepository;
 import com.blibiotecaex.blibioteca.repository.CategoriaRepository;
 import com.blibiotecaex.blibioteca.repository.LivroRepository;
+import com.blibiotecaex.blibioteca.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class LivroService {
@@ -86,19 +88,34 @@ public class LivroService {
 
     return new LivroDTO2(entity);
   }
-  /*
-   * public Livro updateLivro(Livro livro, Long id) {
-   * Livro livroExistenteNoBanco = livroRepository.findById(id).get();
-   * 
-   * livroExistenteNoBanco.setNome(livro.getNome());
-   * livroExistenteNoBanco.setDatapublicacao(livro.getDatapublicacao());
-   * livroExistenteNoBanco.setIsbn(livro.getIsbn());
-   * livroExistenteNoBanco.setCategoria(livro.getCategoria());
-   * 
-   * return livroRepository.save(livroExistenteNoBanco);
-   * 
-   * }
-   */
+
+  @Transactional
+  public LivroDTO2 update(LivroDTO2 livroDto, Long id) {
+
+    try {
+      Livro entity = livroRepository.getReferenceById(id);
+      copyDtoToEntity(livroDto, entity);
+      entity = livroRepository.save(entity);
+      return new LivroDTO2(entity);
+
+    } catch (EntityNotFoundException e) {
+      throw new ResourceNotFoundException("Recurso nao encontrado");
+    }
+
+  }
+
+  private void copyDtoToEntity(LivroDTO2 livroDto, Livro entity) {
+
+    entity.setNome(livroDto.getName());
+    entity.setIsbn(livroDto.getIsbn());
+    entity.setDatapublicacao(livroDto.getDatapublicacao());
+
+    Autor autor = autorRepository.getReferenceById(livroDto.getAutorid());
+    Categoria categoria = categoriaRepository.getReferenceById(livroDto.getCategoriaId());
+
+    entity.setAutor(autor);
+    entity.setCategoria(categoria);
+  }
 
   /*
    * public Livro deleteLivro(Long id) {

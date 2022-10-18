@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -63,14 +64,12 @@ public class LivroController {
 
   }
 
-  /*
-   * @PutMapping("/{id}")
-   * public ResponseEntity<Livro> updateLivro(@RequestBody Livro
-   * livro, @PathVariable Long id) {
-   * return new ResponseEntity<>(livroService.updateLivro(livro, id),
-   * HttpStatus.OK);
-   * }
-   */
+  @PutMapping(value = "/{id}")
+  public ResponseEntity<LivroDTO2> update(@PathVariable Long id, @RequestBody LivroDTO2 livroDTO) {
+    livroDTO = livroService.update(livroDTO, id);
+    return ResponseEntity.ok(livroDTO);
+  }
+
   /*
    * @DeleteMapping("/{id}")
    * public ResponseEntity<Livro> deleteLivro(@PathVariable Long id) {
