@@ -68,7 +68,7 @@ public class LivroService {
 		return livroAtualizadoDTO;
 	}
 	
-	private Livro toEntidade (LivroDTO livroDTO) {
+	public Livro toEntidade (LivroDTO livroDTO) {
 		Livro livro = new Livro();
 		
 		livro.setCodigoIsbn(livroDTO.getCodigoIsbn());
@@ -79,7 +79,7 @@ public class LivroService {
 		return livro;
 	}
 	
-	private LivroDTO toDTO(Livro livro) {
+	public LivroDTO toDTO(Livro livro) {
 		LivroDTO livroDTO = new LivroDTO();
 		
 		livroDTO.setCodigoIsbn(livro.getCodigoIsbn());

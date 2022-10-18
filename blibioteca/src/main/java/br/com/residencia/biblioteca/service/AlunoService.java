@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.residencia.biblioteca.dto.AlunoDTO;
 import br.com.residencia.biblioteca.entity.Aluno;
 import br.com.residencia.biblioteca.repository.AlunoRepository;
 
@@ -12,7 +13,7 @@ import br.com.residencia.biblioteca.repository.AlunoRepository;
 public class AlunoService {
 	@Autowired
 	AlunoRepository alunoRepository;
-	
+
 	public List<Aluno> getAllAlunos(){
 		return alunoRepository.findAll();
 	}
@@ -47,6 +48,37 @@ public class AlunoService {
 	public Aluno deleteAluno(Integer id) {
 		alunoRepository.deleteById(id);
 		return getAlunoById(id);
+	}
+	
+	private Aluno toEntidade (AlunoDTO alunoDTO) {
+		Aluno aluno = new Aluno();
+		
+		aluno.setBairro(alunoDTO.getBairro());
+		aluno.setCidade(alunoDTO.getCidade());
+		aluno.setComplemento(alunoDTO.getComplemento());
+		aluno.setCpf(alunoDTO.getCpf());
+		aluno.setDataNascimento(alunoDTO.getDataNascimento());
+		aluno.setLogradouro(alunoDTO.getLogradouro());
+		aluno.setNome(alunoDTO.getNome());
+		aluno.setNumeroLogradouro(alunoDTO.getNumeroLogradouro());
+		
+		return aluno;
+	}
+	
+	private AlunoDTO toDTO(Aluno aluno) {
+		AlunoDTO alunoDTO = new AlunoDTO();
+		
+		alunoDTO.setBairro(aluno.getBairro());
+		alunoDTO.setCidade(aluno.getCidade());
+		alunoDTO.setComplemento(aluno.getComplemento());
+		alunoDTO.setCpf(aluno.getCpf());
+		alunoDTO.setDataNascimento(aluno.getDataNascimento());
+		alunoDTO.setLogradouro(aluno.getLogradouro());
+		alunoDTO.setNome(aluno.getNome());
+		alunoDTO.setNumeroLogradouro(aluno.getNumeroLogradouro());
+		alunoDTO.setNumeroMatriculaAluno(aluno.getNumeroMatriculaAluno());
+		
+		return alunoDTO;
 	}
 	
 }

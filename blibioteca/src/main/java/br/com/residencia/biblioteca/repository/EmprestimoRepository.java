@@ -7,5 +7,4 @@ import br.com.residencia.biblioteca.entity.Emprestimo;
 public interface EmprestimoRepository
 	extends JpaRepository<Emprestimo,Integer>
 {
-
 }

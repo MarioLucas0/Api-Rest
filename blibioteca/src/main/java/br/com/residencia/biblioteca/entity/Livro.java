@@ -27,13 +27,13 @@ public class Livro {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "codigolivro")
-	private Integer codigoLivro;
+	private Integer codigoLivro; 
 
 	@Column(name = "nomelivro")
-	private String nomeLivro;
+	private String nomeLivro; //findByNomeLivro
 
 	@Column(name = "nomeautor")
-	private String nomeAutor;
+	private String nomeAutor; //findByNomeAutor
 
 	@Column(name = "datalancamento")
 	private Instant dataLancamento;
@@ -43,7 +43,7 @@ public class Livro {
 
 	@ManyToOne
 	@JoinColumn(name = "codigoeditora", referencedColumnName = "codigoeditora")
-	private Editora editora;
+	private Editora editora; //findByEditora
 
 	@OneToMany(mappedBy = "livro")
 	private Set<Emprestimo> emprestimos;

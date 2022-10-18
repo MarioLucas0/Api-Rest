@@ -28,7 +28,7 @@ public class AlunoController {
 		return new ResponseEntity<>(alunoService.getAllAlunos(),
 				HttpStatus.OK);
 	}
-
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<Aluno> getAlunoById(@PathVariable Integer id) {
 		Aluno aluno = alunoService.getAlunoById(id);
