@@ -9,7 +9,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
 @Entity
 @Table(name = "usuario")
 public class User {
@@ -19,14 +18,14 @@ public class User {
 	private Integer userId;
 
 	@Column(name = "user_nome")
-	private String usuarioNome;
-
-	@Column(name = "user_email")
+    private String usuarioNome;
+    
+	@Column(name = "user_email", unique=true)
 	private String userEmail;
 
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	@Column(name = "user_password")
-	private String userPassword;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "user_password")
+    private String userPassword;
 
 	public Integer getUserId() {
 		return userId;

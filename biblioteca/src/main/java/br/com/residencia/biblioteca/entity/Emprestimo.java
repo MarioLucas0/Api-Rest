@@ -1,4 +1,5 @@
 package br.com.residencia.biblioteca.entity;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 
@@ -11,19 +12,22 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-				  property = "codigoEmprestimo", scope = Emprestimo.class)
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "codigoEmprestimo")
 @Entity
 @Table(name = "emprestimo")
 public class Emprestimo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "codigoemprestimo")
-	private int codigoEmprestimo;
-	
+	private Integer codigoEmprestimo;
+
 	@Column(name = "dataemprestimo")
 	private Instant dataEmprestimo;
 
@@ -34,35 +38,20 @@ public class Emprestimo {
 	private BigDecimal valorEmprestimo;
 
 	@ManyToOne
-	@JoinColumn(name = "numeromatriculaaluno", referencedColumnName = "numeromatriculaaluno")
+	@JoinColumn(name = "numeromatriculaaluno", 
+		referencedColumnName = "numeromatriculaaluno")
 	private Aluno aluno;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "codigolivro", referencedColumnName = "codigolivro")
 	private Livro livro;
 
-//	Getters and Setters
-	public Aluno getAluno() {
-		return aluno;
-	}
-	
-	public void setAluno(Aluno aluno) {
-		this.aluno = aluno;
-	}
-	
-	public Livro getLivro() {
-		return livro;
-	}
-	
-	public void setLivro(Livro livro) {
-		this.livro = livro;
-	}
-	
-	public int getCodigoEmprestimo() {
+
+	public Integer getCodigoEmprestimo() {
 		return codigoEmprestimo;
 	}
 
-	public void setCodigoEmprestimo(int codigoEmprestimo) {
+	public void setCodigoEmprestimo(Integer codigoEmprestimo) {
 		this.codigoEmprestimo = codigoEmprestimo;
 	}
 
@@ -89,4 +78,21 @@ public class Emprestimo {
 	public void setValorEmprestimo(BigDecimal valorEmprestimo) {
 		this.valorEmprestimo = valorEmprestimo;
 	}
+
+	public Aluno getAluno() {
+		return aluno;
+	}
+
+	public void setAluno(Aluno aluno) {
+		this.aluno = aluno;
+	}
+
+	public Livro getLivro() {
+		return livro;
+	}
+
+	public void setLivro(Livro livro) {
+		this.livro = livro;
+	}
+
 }

@@ -2,35 +2,18 @@ package br.com.residencia.biblioteca.dto;
 
 import java.time.Instant;
 
-import br.com.residencia.biblioteca.entity.Editora;
-
 public class LivroDTO {
+	private Integer codigoLivro;
 	private String nomeLivro;
 	private String nomeAutor;
 	private Instant dataLancamento;
-	private int codigoIsbn;
+	private Integer codigoIsbn;
 
-	public LivroDTO() {
-
-	}
-
-	public LivroDTO(Integer codigoLivro, String nomeLivro, String nomeAutor, Instant dataLancamento,
-			Integer codigoIsbn) {
-		this.codigoLivro = codigoLivro;
-		this.nomeLivro = nomeLivro;
-		this.nomeAutor = nomeAutor;
-		this.dataLancamento = dataLancamento;
-		this.codigoIsbn = codigoIsbn;
-	}
-
-//	Getters and Setters 
-	private int codigoLivro;
-
-	public int getCodigoLivro() {
+	public Integer getCodigoLivro() {
 		return codigoLivro;
 	}
 
-	public void setCodigoLivro(int codigoLivro) {
+	public void setCodigoLivro(Integer codigoLivro) {
 		this.codigoLivro = codigoLivro;
 	}
 
@@ -58,11 +41,11 @@ public class LivroDTO {
 		this.dataLancamento = dataLancamento;
 	}
 
-	public int getCodigoIsbn() {
+	public Integer getCodigoIsbn() {
 		return codigoIsbn;
 	}
 
-	public void setCodigoIsbn(int codigoIsbn) {
+	public void setCodigoIsbn(Integer codigoIsbn) {
 		this.codigoIsbn = codigoIsbn;
 	}
 }

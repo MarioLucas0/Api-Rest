@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.serratec.ecommerce.ecommerce.dto.ConsultaCepDTO;
+import com.serratec.ecommerce.ecommerce.dto.EnderecoDTO2;
 import com.serratec.ecommerce.ecommerce.model.Endereco;
 import com.serratec.ecommerce.ecommerce.repository.EnderecoRepository;
 
@@ -22,24 +23,21 @@ public class EnderecoService {
     return enderecoRepository.findAll();
   }
 
-  public Endereco saveEndereco(Endereco editora) {
-    return enderecoRepository.save(editora);
+  public Endereco saveEndereco(Endereco endereco) {
+    return enderecoRepository.save(endereco);
   }
 
-  public Endereco saveEditoraFromApi(String cep) {
+  public Endereco saveEditoraFromApi(String cep, EnderecoDTO2 end) {
     ConsultaCepDTO enderecoDTO = consultaCepApiExterna(cep);
 
     Endereco endereco = new Endereco();
+
     endereco.setCidade(enderecoDTO.getLocalidade());
     endereco.setBairro(enderecoDTO.getBairro());
-    endereco.setComplemento(enderecoDTO.getComplemento());
+    endereco.setComplemento(end.getComplemento());
     endereco.setRua(enderecoDTO.getLogradouro());
     endereco.setUf(enderecoDTO.getUf());
-    if (enderecoDTO.getNumero() != null) {
-      endereco.setNumero(enderecoDTO.getNumero());
-    } else {
-      endereco.setNumero("");
-    }
+    endereco.setNumero(end.getNumero());
 
     return enderecoRepository.save(endereco);
   }
@@ -55,4 +53,5 @@ public class EnderecoService {
 
     return consultaCepDTO;
   }
+
 }

@@ -1,4 +1,5 @@
 package br.com.residencia.biblioteca.entity;
+
 import java.time.Instant;
 import java.util.Set;
 
@@ -13,65 +14,57 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-				  property = "numeroMatriculaAluno", scope = Aluno.class)
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "numeroMatriculaAluno")
 @Entity
 @Table(name = "alunos")
 public class Aluno {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "numeromatriculaaluno")
-	private int numeroMatriculaAluno;
+	private Integer numeroMatriculaAluno;
 
 	@Column(name = "nome")
 	private String nome;
-	
+
 	@Column(name = "datanascimento")
 	private Instant dataNascimento;
-	
+
 	@Column(name = "cpf")
 	private String cpf;
 
 	@Column(name = "logradouro")
 	private String logradouro;
-	
+
 	@Column(name = "numerologradouro")
 	private String numeroLogradouro;
-	
+
 	@Column(name = "complemento")
 	private String complemento;
-	
+
 	@Column(name = "bairro")
 	private String bairro;
-	
+
 	@Column(name = "cidade")
 	private String cidade;
-	
-	@OneToMany(mappedBy = "aluno")
+
+	@OneToMany(mappedBy="aluno")
 	private Set<Emprestimo> emprestimos;
-	
-//	Getters and Setters
-	public String getNumeroLogradouro() {
-		return numeroLogradouro;
-	}
-	
-	public void setNumeroLogradouro(String numeroLogradouro) {
-		this.numeroLogradouro = numeroLogradouro;
-	}
-	
+
 	public Set<Emprestimo> getEmprestimos() {
 		return emprestimos;
 	}
-	
+
 	public void setEmprestimos(Set<Emprestimo> emprestimos) {
 		this.emprestimos = emprestimos;
 	}
-	
-	public int getNumeroMatriculaAluno() {
+
+	public Integer getNumeroMatriculaAluno() {
 		return numeroMatriculaAluno;
 	}
 
-	public void setNumeroMatriculaAluno(int numeroMatriculaAluno) {
+	public void setNumeroMatriculaAluno(Integer numeroMatriculaAluno) {
 		this.numeroMatriculaAluno = numeroMatriculaAluno;
 	}
 
@@ -105,6 +98,14 @@ public class Aluno {
 
 	public void setLogradouro(String logradouro) {
 		this.logradouro = logradouro;
+	}
+
+	public String getNumeroLogradouro() {
+		return numeroLogradouro;
+	}
+
+	public void setNumeroLogradouro(String numeroLogradouro) {
+		this.numeroLogradouro = numeroLogradouro;
 	}
 
 	public String getComplemento() {

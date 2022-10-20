@@ -12,7 +12,6 @@ public class ConsultaCnpjDTO {
 	private String telefone;
 	private String email;
 
-//	Getters and setters
 	public String getSituacao() {
 		return situacao;
 	}

@@ -6,10 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.serratec.ecommerce.ecommerce.dto.ConsultaCepDTO;
+import com.serratec.ecommerce.ecommerce.dto.EnderecoDTO2;
 import com.serratec.ecommerce.ecommerce.model.Endereco;
 import com.serratec.ecommerce.ecommerce.service.EnderecoService;
 
@@ -32,8 +34,9 @@ public class EnderecoController {
   }
 
   @PostMapping("/cep/post/{cep}")
-  public ResponseEntity<Endereco> saveEditoraFromApiPost(@PathVariable String cep) {
-    return new ResponseEntity<>(enderecoService.saveEditoraFromApi(cep),
+  public ResponseEntity<Endereco> saveEditoraFromApiPost(@PathVariable String cep,
+      @RequestBody EnderecoDTO2 endereco2) {
+    return new ResponseEntity<>(enderecoService.saveEditoraFromApi(cep, endereco2),
         HttpStatus.CREATED);
   }
 
