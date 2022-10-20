@@ -1,11 +1,15 @@
 package com.serratec.ecommerce.ecommerce.dto;
 
+import com.serratec.ecommerce.ecommerce.model.Cliente;
+
 public class ClienteDTO {
 
+  private Long id;
   private String email;
   private String nomeCompleto;
   private String cpf;
   private String dataNascimento;
+  private EnderecoDTO endereco;
 
   public ClienteDTO() {
   }
@@ -15,6 +19,23 @@ public class ClienteDTO {
     this.nomeCompleto = nomeCompleto;
     this.cpf = cpf;
     this.dataNascimento = dataNascimento;
+  }
+
+  public ClienteDTO(Cliente cliente) {
+    email = cliente.getEmail();
+    nomeCompleto = cliente.getNomeCompleto();
+    cpf = cliente.getCpf();
+    dataNascimento = cliente.getDataNascimento();
+    endereco = new EnderecoDTO(cliente.getEndereco());
+
+  }
+
+  public Long getId() {
+    return this.id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public String getEmail() {
@@ -47,6 +68,14 @@ public class ClienteDTO {
 
   public void setDataNascimento(String dataNascimento) {
     this.dataNascimento = dataNascimento;
+  }
+
+  public EnderecoDTO getEndereco() {
+    return this.endereco;
+  }
+
+  public void setEndereco(EnderecoDTO endereco) {
+    this.endereco = endereco;
   }
 
 }

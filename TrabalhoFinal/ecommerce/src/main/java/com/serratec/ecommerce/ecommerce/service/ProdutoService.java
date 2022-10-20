@@ -1,13 +1,13 @@
 package com.serratec.ecommerce.ecommerce.service;
 
+import java.util.List;
+
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.serratec.ecommerce.ecommerce.dto.ProdutoDTO;
@@ -31,9 +31,9 @@ public class ProdutoService {
 
   }
 
-  public Page<ProdutoDTO> findAll(Pageable pageable) {
-    Page<Produto> result = produtoRepository.findAll(pageable);
-    return result.map(x -> new ProdutoDTO(x));
+  public List<ProdutoDTO> findAll() {
+    List<Produto> result = produtoRepository.findAll();
+    return result.stream().map(x -> new ProdutoDTO(x)).toList();
   }
 
   @Transactional

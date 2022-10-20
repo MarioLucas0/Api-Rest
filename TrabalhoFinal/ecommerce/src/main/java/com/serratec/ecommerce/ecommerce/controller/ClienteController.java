@@ -17,44 +17,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.serratec.ecommerce.ecommerce.dto.ProdutoDTO;
-import com.serratec.ecommerce.ecommerce.service.ProdutoService;
+import com.serratec.ecommerce.ecommerce.dto.ClienteDTO;
+import com.serratec.ecommerce.ecommerce.service.ClienteService;
 
 @RestController
-@RequestMapping(value = "/produtos")
-public class ProdutoController {
+@RequestMapping(value = "/cliente")
+public class ClienteController {
 
   @Autowired
-  private ProdutoService produtoService;
+  private ClienteService clienteService;
 
   @GetMapping(value = "/{id}")
-  public ResponseEntity<ProdutoDTO> findById(@PathVariable Long id) {
-    ProdutoDTO dto = produtoService.findById(id);
+  public ResponseEntity<ClienteDTO> findById(@PathVariable Long id) {
+    ClienteDTO dto = clienteService.findById(id);
     return ResponseEntity.ok(dto);
   }
 
   @GetMapping
-  public ResponseEntity<List<ProdutoDTO>> findAll() {
-    List<ProdutoDTO> dto = produtoService.findAll();
+  public ResponseEntity<List<ClienteDTO>> findAll() {
+    List<ClienteDTO> dto = clienteService.findAll();
     return ResponseEntity.ok(dto);
   }
 
   @PostMapping
-  public ResponseEntity<ProdutoDTO> insert(@Valid @RequestBody ProdutoDTO productDto) {
-    ProdutoDTO dto = produtoService.insert(productDto);
+  public ResponseEntity<ClienteDTO> insert(@Valid @RequestBody ClienteDTO clienteDto) {
+    ClienteDTO dto = clienteService.insert(clienteDto);
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
     return ResponseEntity.created(uri).body(dto);
   }
 
   @PutMapping(value = "/{id}")
-  public ResponseEntity<ProdutoDTO> update(@Valid @PathVariable Long id, @RequestBody ProdutoDTO productDto) {
-    productDto = produtoService.update(productDto, id);
+  public ResponseEntity<ClienteDTO> update(@Valid @PathVariable Long id, @RequestBody ClienteDTO productDto) {
+    productDto = clienteService.update(productDto, id);
     return ResponseEntity.ok(productDto);
   }
 
   @DeleteMapping(value = "/{id}")
   public ResponseEntity<Void> delete(@PathVariable Long id) {
-    produtoService.deleteById(id);
+    clienteService.deleteById(id);
     return ResponseEntity.noContent().build();
   }
 }
