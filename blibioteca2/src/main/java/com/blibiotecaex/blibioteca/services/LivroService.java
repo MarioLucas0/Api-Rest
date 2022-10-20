@@ -1,5 +1,6 @@
 package com.blibiotecaex.blibioteca.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
@@ -7,6 +8,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.blibiotecaex.blibioteca.dto.LivroDTO;
@@ -17,6 +20,7 @@ import com.blibiotecaex.blibioteca.entities.Livro;
 import com.blibiotecaex.blibioteca.repository.AutorRepository;
 import com.blibiotecaex.blibioteca.repository.CategoriaRepository;
 import com.blibiotecaex.blibioteca.repository.LivroRepository;
+import com.blibiotecaex.blibioteca.services.exceptions.DatabaseException;
 import com.blibiotecaex.blibioteca.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -29,10 +33,22 @@ public class LivroService {
   @Autowired
   CategoriaRepository categoriaRepository;
 
-  @Transactional
-  public List<Livro> findAll() {
-    return livroRepository.findAll();
+  public List<LivroDTO2> getAllLivros() {
+    List<Livro> listaLivros = livroRepository.findAll();
+    List<LivroDTO2> listaLivrosDTO = new ArrayList<>();
 
+    // 1. Percorrer a lista de entidades Editora (chamada listaEditora)
+    // 2. Na lista de entidade, pegar cada entidade existente nela
+    for (Livro livro : listaLivros) {
+      // 3. Transformar cada entidade existente na lista em um DTO
+      LivroDTO2 editoraDTO = toDTO(livro);
+
+      // OBS: para converter a entidade no DTO, usar o metodo toDTO
+      // 4. Adicionar cada DTO (que foi transformado a partir da entidade) na lista de
+      // DTO
+      listaLivrosDTO.add(editoraDTO);
+    }
+    return listaLivrosDTO;
   }
 
   public Livro getLivroById(Long id) {
@@ -117,11 +133,29 @@ public class LivroService {
     entity.setCategoria(categoria);
   }
 
-  /*
-   * public Livro deleteLivro(Long id) {
-   * livroRepository.deleteById(id);
-   * return getLivroById(id);
-   * }
-   */
+  public void deleteById(Long id) {
+
+    try {
+      livroRepository.deleteById(id);
+
+    } catch (EmptyResultDataAccessException e) {
+      throw new ResourceNotFoundException("Recurso nao encontrado");
+    } catch (DataIntegrityViolationException e) {
+      throw new DatabaseException("Falha de integridade Referencial");
+    }
+
+  }
+
+  private LivroDTO2 toDTO(Livro editora) {
+    LivroDTO2 editoraDTO = new LivroDTO2();
+
+    editoraDTO.setAutorid(editora.getAutor().getId());
+    editoraDTO.setCategoriaId(editora.getCategoria().getId());
+    editoraDTO.setDatapublicacao(editora.getDatapublicacao());
+    editoraDTO.setIsbn(editora.getIsbn());
+    editoraDTO.setName(editora.getNome());
+
+    return editoraDTO;
+  }
 
 }

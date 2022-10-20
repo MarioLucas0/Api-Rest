@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +28,8 @@ public class LivroController {
   private LivroService livroService;
 
   @GetMapping
-  public ResponseEntity<List<Livro>> getAllLivros() {
-    return new ResponseEntity<>(livroService.findAll(),
+  public ResponseEntity<List<LivroDTO2>> getAllEditoras() {
+    return new ResponseEntity<>(livroService.getAllLivros(),
         HttpStatus.OK);
   }
 
@@ -70,16 +71,10 @@ public class LivroController {
     return ResponseEntity.ok(livroDTO);
   }
 
-  /*
-   * @DeleteMapping("/{id}")
-   * public ResponseEntity<Livro> deleteLivro(@PathVariable Long id) {
-   * Livro livro = livroService.getLivroById(id);
-   * if (null == livro)
-   * return new ResponseEntity<>(livro,
-   * HttpStatus.NOT_FOUND);
-   * else
-   * return new ResponseEntity<>(livroService.deleteLivro(id),
-   * HttpStatus.OK);
-   * }
-   */
+  @DeleteMapping(value = "/{id}")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    livroService.deleteById(id);
+    return ResponseEntity.noContent().build();
+  }
+
 }
