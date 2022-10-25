@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.com.residencia.biblioteca.dto.ConsultaCnpjDTO;
 import br.com.residencia.biblioteca.dto.EditoraDTO;
-import br.com.residencia.biblioteca.dto.FreeImageHostDTO;
+import br.com.residencia.biblioteca.dto.imgbb.ImgBBDTO;
 import br.com.residencia.biblioteca.entity.Editora;
 import br.com.residencia.biblioteca.service.EditoraService;
 
@@ -95,6 +95,21 @@ public class EditoraController {
 				HttpStatus.CREATED);
 	}
 	
+	@PostMapping(value = "/cadastro-editora-com-foto",
+			     consumes = { MediaType.APPLICATION_JSON_VALUE, 
+			    		      MediaType.MULTIPART_FORM_DATA_VALUE}
+	)
+	public ResponseEntity<EditoraDTO> saveEditoraFoto(
+			@RequestPart("editora") String editoraTxt,
+			@RequestPart("filename") MultipartFile file
+	) throws IOException{
+		EditoraDTO editoraDTO = editoraService.saveEditoraFoto(editoraTxt, file);
+		if(editoraDTO == null)
+			return new ResponseEntity<>(editoraDTO, HttpStatus.BAD_REQUEST);
+		else
+			return new ResponseEntity<>(editoraDTO, HttpStatus.CREATED);
+	}
+	
 	@PutMapping("/{id}")
 	public ResponseEntity<Editora> updateEditora(@RequestBody Editora editora, 
 			@PathVariable Integer id){
@@ -123,21 +138,15 @@ public class EditoraController {
 	
 	@PostMapping(value = "/editora-com-foto", consumes = { MediaType.APPLICATION_JSON_VALUE,
 			 MediaType.MULTIPART_FORM_DATA_VALUE })
-	public ResponseEntity<String> saveEditoraComFoto(@RequestPart("editora") String editora,
+	public ResponseEntity<EditoraDTO> saveEditoraComFoto(@RequestPart("editora") String editora,
 			@RequestPart("source") MultipartFile file) throws IOException {
 		
-		//ResponseEntity<FreeImageHostDTO> freeImgDTO = editoraService.saveEditoraComFoto(editora, file);
-		ResponseEntity<String> freeImgDTO = editoraService.saveEditoraComFoto(editora, file);
+		EditoraDTO editoraDTO = editoraService.saveFotoImgBB(editora, file);
 		
-		return new ResponseEntity<>(freeImgDTO.getBody(), HttpStatus.OK);
-		
-		/*
-		Editora novaEditora = editoraService.saveEditoraComFoto(editora, file); 
-		if (null == novaEditora)
+		if (null == editoraDTO)
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		else
-			return new ResponseEntity<>(novaEditora, HttpStatus.CREATED);
-		*/	
+			return new ResponseEntity<>(editoraDTO, HttpStatus.CREATED);
 	}
 
 }

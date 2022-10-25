@@ -58,4 +58,12 @@ public class EditoraDTO {
 	public void setImagemUrl(String imagemUrl) {
 		this.imagemUrl = imagemUrl;
 	}
+
+	@Override
+	public String toString() {
+		return "EditoraDTO [codigoEditora=" + codigoEditora + ", nome=" + nome + ", imagemNome=" + imagemNome
+				+ ", imagemFileName=" + imagemFileName + ", imagemUrl=" + imagemUrl + ", listaLivrosDTO="
+				+ listaLivrosDTO + "]";
+	}
+	
 }

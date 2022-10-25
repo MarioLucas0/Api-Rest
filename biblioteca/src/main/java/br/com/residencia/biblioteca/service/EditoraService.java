@@ -1,32 +1,22 @@
 package br.com.residencia.biblioteca.service;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.ssl.TrustStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,15 +25,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.residencia.biblioteca.dto.ConsultaCnpjDTO;
 import br.com.residencia.biblioteca.dto.EditoraDTO;
-import br.com.residencia.biblioteca.dto.FreeImageHostDTO;
 import br.com.residencia.biblioteca.dto.LivroDTO;
+import br.com.residencia.biblioteca.dto.imgbb.ImgBBDTO;
 import br.com.residencia.biblioteca.entity.Editora;
 import br.com.residencia.biblioteca.entity.Livro;
 import br.com.residencia.biblioteca.repository.EditoraRepository;
 import br.com.residencia.biblioteca.repository.LivroRepository;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
+
 
 @Service
 public class EditoraService {
@@ -56,11 +44,14 @@ public class EditoraService {
 	@Autowired
 	LivroService livroService;
 	
-	@Value("${freeimage.host.url}")
-	private String freeImageHostUrl;
+	@Autowired
+	EmailService emailService;
 	
-	@Value("${freeimage.host.key}")
-    private String freeImageHostKey;
+	@Value("${imgbb.host.url}")
+	private String imgBBHostUrl;
+	
+	@Value("${imgbb.host.key}")
+    private String imgBBHostKey;
 	
 	public List<Editora> getAllEditoras(){
 		return editoraRepository.findAll();
@@ -109,6 +100,81 @@ public class EditoraService {
 		EditoraDTO editoraAtualizadaDTO = toDTO(novaEditora);
 		return editoraAtualizadaDTO;
 	}
+	
+	
+	public EditoraDTO saveEditoraFoto(
+			String editoraTxt,
+			MultipartFile file
+	) throws IOException {
+		RestTemplate restTemplate = new RestTemplate();
+		String serverUrl = imgBBHostUrl + imgBBHostKey;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		
+		MultiValueMap<String, String> fileMap = new LinkedMultiValueMap<>();
+		
+		ContentDisposition contentDisposition = ContentDisposition
+				.builder("form-data")
+				.name("image")
+				.filename(file.getOriginalFilename())
+				.build();
+		
+		fileMap.add(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString());
+		
+		HttpEntity<byte[]> fileEntity = new HttpEntity<>(file.getBytes(), fileMap);
+		
+		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+		body.add("image", fileEntity);
+		
+		HttpEntity<MultiValueMap<String, Object>> requestEntity =
+				new HttpEntity<>(body, headers);
+		
+		ResponseEntity<ImgBBDTO> response = null;
+		ImgBBDTO imgDTO = new ImgBBDTO();
+		Editora novaEditora = new Editora(); 
+		try {
+			response = restTemplate.exchange(
+					serverUrl,
+					HttpMethod.POST,
+					requestEntity,
+					ImgBBDTO.class);
+			
+			imgDTO = response.getBody();
+			//System.out.println("ImgBBDTO: " + imgDTO.getData().toString());
+		} catch (HttpClientErrorException e) {
+			e.printStackTrace();
+		}
+		
+		//Converte os dados da editora recebidos no formato String em Entidade
+		//  Coleta os dados da imagem, após upload via API, e armazena na Entidade Editora
+		if(null != imgDTO) {
+			Editora editoraFromJson = convertEditoraFromStringJson(editoraTxt);
+			editoraFromJson.setImagemFileName(imgDTO.getData().getImage().getFilename());
+			editoraFromJson.setImagemNome(imgDTO.getData().getTitle());
+			editoraFromJson.setImagemUrl(imgDTO.getData().getUrl());
+			novaEditora = editoraRepository.save(editoraFromJson);
+		}
+		
+		return toDTO(novaEditora);
+	}
+	
+	private Editora convertEditoraFromStringJson(String editoraJson) {
+		Editora editora = new Editora();
+		
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			editora = objectMapper.readValue(editoraJson, Editora.class);
+		} catch (IOException err) {
+			System.out.printf("Ocorreu um erro ao tentar converter a string json para um instância da entidade Editora", err.toString());
+		}
+		
+		return editora;
+	}
+	
+	
+	
+	
 /*
 	public EditoraDTO saveEditoraDTOOtimizado(EditoraDTO editoraDTO) {
 		Editora novaEditora = editoraRepository.save(toEntidade(editoraDTO));
@@ -133,6 +199,9 @@ public class EditoraService {
 			editoraAtualizadaDTO = toDTO(editoraAtualizada);
 			
 		}
+		emailService.sendEmail("ale@yahoo.com", "Teste de envio de email", 
+				editoraAtualizadaDTO.toString());
+		
 		return editoraAtualizadaDTO;
 	}
 	
@@ -149,7 +218,10 @@ public class EditoraService {
 		
 		editoraDTO.setCodigoEditora(editora.getCodigoEditora());
 		editoraDTO.setNome(editora.getNome());
-		
+		editoraDTO.setImagemFileName(editora.getImagemFileName());
+		editoraDTO.setImagemNome(editora.getImagemNome());
+		editoraDTO.setImagemUrl(editora.getImagemUrl());
+
 		return editoraDTO;
 	}
 	
@@ -165,7 +237,6 @@ public class EditoraService {
 		//return editoraRepository.save(editora);
 	}
 	
-	
 	public ConsultaCnpjDTO consultaCnpjApiExterna(String cnpj) {
 		RestTemplate restTemplate = new RestTemplate();
 		String uri = "https://receitaws.com.br/v1/cnpj/{cnpj}";
@@ -177,8 +248,6 @@ public class EditoraService {
 		
 		return consultaCnpjDTO;
 	}
-	
-	
 
 	public Editora deleteEditora(Integer id) {
 		editoraRepository.deleteById(id);
@@ -209,157 +278,61 @@ public class EditoraService {
 		return listaEditoraDTO; 
 	}
 	
-	public ResponseEntity<String> saveEditoraComFotoNew(String editora,
+	public EditoraDTO saveFotoImgBB(String editora,
 			MultipartFile file) throws IOException {
-        
-		RestTemplate restTemplate = new RestTemplate();
-		String serverUrl = freeImageHostUrl + freeImageHostKey;
 		
-		HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        // This nested HttpEntiy is important to create the correct
-        // Content-Disposition entry with metadata "name" and "filename"
-        MultiValueMap<String, String> fileMap = new LinkedMultiValueMap<>();
-        
-        ContentDisposition contentDisposition = ContentDisposition
-                .builder("form-data")
-                .name("source")
-                .filename(file.getOriginalFilename())
-                .build();
-        
-        fileMap.add(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString());
-        
-        HttpEntity<byte[]> fileEntity = new HttpEntity<>(file.getBytes(), fileMap);
-
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("source", fileEntity);
-
-        HttpEntity<MultiValueMap<String, Object>> requestEntity =
-                new HttpEntity<>(body, headers);
-        
-        
-        ResponseEntity<String> response = null;
-        try {
-            response = restTemplate.exchange(
-            		serverUrl,
-                    HttpMethod.POST,
-                    requestEntity,
-                    String.class);
-        } catch (HttpClientErrorException e) {
-            e.printStackTrace();
-        }
-        
-        return response;
-    }
-	
-	public ResponseEntity<String> saveEditoraComFoto(@RequestPart("editora") String editora,
-			@RequestPart("source") MultipartFile file) throws IOException {
-		/*
-		HttpComponentsClientHttpRequestFactory requestFactory 
-	      = new HttpComponentsClientHttpRequestFactory();
-	    
-		DefaultHttpClient httpClient
-	      = (DefaultHttpClient) requestFactory.getHttpClient();
-	    
-		TrustStrategy acceptingTrustStrategy = (cert, authType) -> true
-				SSLSocketFactory sf = new SSLSocketFactory(
-	      acceptingTrustStrategy, ALLOW_ALL_HOSTNAME_VERIFIER);
-	    httpClient.getConnectionManager().getSchemeRegistry()
-	      .register(new Scheme("https", 8443, sf));
-	    
-	    String urlOverHttps
-	      = "https://localhost:8443/httpclient-simple/api/bars/1";
-	    ResponseEntity<String> response = new RestTemplate(requestFactory).
-	      exchange(urlOverHttps, HttpMethod.GET, null, String.class);
-	    assertThat(response.getStatusCode().value(), equalTo(200));	    
-		*/
 		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-		String serverUrl = freeImageHostUrl + freeImageHostKey;
+		String serverUrl = imgBBHostUrl + imgBBHostKey;
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 		
-		LinkedMultiValueMap<String, String> pdfHeaderMap = new LinkedMultiValueMap<>();
-		pdfHeaderMap.add("Content-disposition", "form-data; name=source; filename=" + file.getOriginalFilename());
-		pdfHeaderMap.add("Content-type", "image/jpeg");
-		HttpEntity<byte[]> doc = new HttpEntity<byte[]>(file.getBytes(), pdfHeaderMap);
+		MultiValueMap<String, String> fileMap = new LinkedMultiValueMap<>();
 		
-		LinkedMultiValueMap<String, Object> multipartReqMap = new LinkedMultiValueMap<>();
-		multipartReqMap.add("source", doc);
+		ContentDisposition contentDisposition = ContentDisposition
+				.builder("form-data")
+				.name("image")
+				.filename(file.getOriginalFilename())
+				.build();
 		
-		HttpEntity<LinkedMultiValueMap<String, Object>> reqEntity = new HttpEntity<>(multipartReqMap, headers);
-		ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, reqEntity, String.class);		
+		fileMap.add(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString());
 		
-		return response;		
-	}
-	
-	public ResponseEntity<String> saveEditoraComFotoOld2(@RequestPart("editora") String editora,
-			@RequestPart("source") MultipartFile file) throws IOException {
-		
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-		String serverUrl = freeImageHostUrl + freeImageHostKey;
-		
-		HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-	    LinkedMultiValueMap<String, String> pdfHeaderMap = new LinkedMultiValueMap<>();
-	    pdfHeaderMap.add("Content-disposition", "form-data; name=source; filename=" + file.getOriginalFilename());
-	    pdfHeaderMap.add("Content-type", "image/jpeg");
-	    HttpEntity<byte[]> doc = new HttpEntity<byte[]>(file.getBytes(), pdfHeaderMap);
-
-	    LinkedMultiValueMap<String, Object> multipartReqMap = new LinkedMultiValueMap<>();
-	    multipartReqMap.add("source", doc);
-
-	    HttpEntity<LinkedMultiValueMap<String, Object>> reqEntity = new HttpEntity<>(multipartReqMap, headers);
-	    ResponseEntity<String> response = restTemplate.exchange(serverUrl, HttpMethod.POST, reqEntity, String.class);		
-		
-		return response;		
-	}
-	
-	public ResponseEntity<String> saveEditoraComFotoOld(@RequestPart("editora") String editora,
-			@RequestPart("source") MultipartFile file) {
-		
-		Editora editoraFromJson = convertEditoraFromStringJson(editora);
-		//Editora novaEditora= editoraRepository.save(editoraFromJson);
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		HttpEntity<byte[]> fileEntity = new HttpEntity<>(file.getBytes(), fileMap);
 		
 		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+		body.add("image", fileEntity);
+		
+		HttpEntity<MultiValueMap<String, Object>> requestEntity =
+				new HttpEntity<>(body, headers);
+		
+		ResponseEntity<ImgBBDTO> response = null;
+		ImgBBDTO imgDTO = new ImgBBDTO();
+		Editora novaEditora = new Editora(); 
 		try {
-			body.add("source", new ByteArrayResource(file.getBytes()));
-		} catch (IOException e) {
-			System.out.println("Ocorreu um erro ao obter os dados da imagem. - " + e);
+			response = restTemplate.exchange(
+					serverUrl,
+					HttpMethod.POST,
+					requestEntity,
+					ImgBBDTO.class);
+			
+			imgDTO = response.getBody();
+			System.out.println("ImgBBDTO: " + imgDTO.getData().toString());
+		} catch (HttpClientErrorException e) {
+			e.printStackTrace();
 		}
 		
-		RestTemplate restTemplate = new RestTemplate();
-		String serverUrl = freeImageHostUrl + freeImageHostKey;
+		//Converte os dados da editora recebidos no formato String em Entidade
+		//  Coleta os dados da imagem, após upload via API, e armazena na Entidade Editora
+		if(null != imgDTO) {
+			Editora editoraFromJson = convertEditoraFromStringJson(editora);
+			editoraFromJson.setImagemFileName(imgDTO.getData().getImage().getFilename());
+			editoraFromJson.setImagemNome(imgDTO.getData().getTitle());
+			editoraFromJson.setImagemUrl(imgDTO.getData().getUrl());
+			novaEditora = editoraRepository.save(editoraFromJson);
+		}
 		
-		HttpEntity<MultiValueMap<String, Object>> 
-			requestEntity = new HttpEntity<>(body, headers);
-/*
-		ResponseEntity<FreeImageHostDTO> response = restTemplate
-		  .postForEntity(serverUrl, requestEntity, FreeImageHostDTO.class);
-*/		
-		ResponseEntity<String> response = restTemplate
-				  .postForEntity(serverUrl, requestEntity, String.class);
-
-		return response;		
+		return toDTO(novaEditora);
 	}
 	
-	private Editora convertEditoraFromStringJson(String editoraJson) {
-		Editora editora = new Editora();
-		
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			editora = objectMapper.readValue(editoraJson, Editora.class);
-		} catch (IOException err) {
-			System.out.printf("Ocorreu um erro ao tentar converter a string json para um instância da entidade Editora", err.toString());
-		}
-		
-		return editora;
-	}
+	
 }
