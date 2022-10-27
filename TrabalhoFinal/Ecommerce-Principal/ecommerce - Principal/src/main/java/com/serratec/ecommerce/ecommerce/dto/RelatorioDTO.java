@@ -98,7 +98,7 @@ public class RelatorioDTO {
         "\nData de Envio = " + getDataEnvio() +
         "\nValor Total do Pedido = " + getValorTotal() +
         "\n                      " +
-        "\nItems do Pedido  \n" + getItems().toString();
+        "\nItems do Pedido  " + getItems().toString();
 
   }
 

@@ -24,8 +24,10 @@ public class ProdutoDTO {
 		qtdEstoque = entity.getQtdEstoque();
 		dataCadastro = entity.getDataCadastro();
 		valorUnitario = entity.getValorUnitario();
+
 		imagemUrl = entity.getImagemUrl();
 		categoria = new CategoriaDTO(entity.getCategoria());
+
 		descricao = entity.getDescricao();
 
 	}

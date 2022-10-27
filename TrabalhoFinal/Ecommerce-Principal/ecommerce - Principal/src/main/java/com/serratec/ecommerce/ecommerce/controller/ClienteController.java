@@ -27,7 +27,9 @@ import com.serratec.ecommerce.ecommerce.service.exceptions.EmailException;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
+@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/clientes")
 public class ClienteController {

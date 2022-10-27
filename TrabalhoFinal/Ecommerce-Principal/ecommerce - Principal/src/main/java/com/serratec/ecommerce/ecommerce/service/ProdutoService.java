@@ -24,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.serratec.ecommerce.ecommerce.dto.CategoriaDTO;
 import com.serratec.ecommerce.ecommerce.dto.ProdutoDTO;
 import com.serratec.ecommerce.ecommerce.model.Categoria;
 import com.serratec.ecommerce.ecommerce.model.Produto;
@@ -53,6 +54,7 @@ public class ProdutoService {
 		Produto produto = produtoRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 		ProdutoDTO dto = new ProdutoDTO(produto);
+
 		return dto;
 
 	}
@@ -120,12 +122,11 @@ public class ProdutoService {
 		produtoFromJson.setImagemNome(imgDTO.getData().getTitle());
 		produtoFromJson.setImagemUrl(imgDTO.getData().getUrl());
 
-		if (produtoFromJson != null) {
-			novoProduto = produtoRepository.save(produtoFromJson);
-		}
+		novoProduto = produtoRepository.save(produtoFromJson);
+		Categoria categoria = categoriaRepository.getReferenceById(novoProduto.getCategoria().getId());
+		CategoriaDTO categoriaDTO = new CategoriaDTO(categoria);
 
-		return paraDTO(novoProduto);
-
+		return paraDTO(novoProduto, categoriaDTO, categoria);
 	}
 
 	private Produto convertProdutoFromStringJson(String produtoJson) {
@@ -141,7 +142,7 @@ public class ProdutoService {
 		return produto;
 	}
 
-	public ProdutoDTO paraDTO(Produto entity) {
+	public ProdutoDTO paraDTO(Produto entity, CategoriaDTO categoriaDTO, Categoria categoria) {
 
 		entity.setNome(entity.getNome());
 		entity.setDataCadastro(entity.getDataCadastro());
@@ -153,7 +154,11 @@ public class ProdutoService {
 		entity.setImagemUrl(entity.getImagemUrl());
 		entity.setDescricao(entity.getDescricao());
 
-		Categoria categoria = categoriaRepository.getReferenceById(entity.getCategoria().getId());
+		categoria.setId(categoriaDTO.getId());
+		categoria.setDescricao(categoriaDTO.getDescricao());
+		categoria.setNome(categoriaDTO.getNome());
+
+		System.out.println(categoria.getId());
 
 		entity.setCategoria(categoria);
 

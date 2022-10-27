@@ -13,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 @Entity
@@ -23,10 +22,9 @@ public class Produto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@NotBlank(message = "O nome  nao pode esta vazio")
+
 	private String nome;
 	@Column(unique = true)
-	@NotBlank(message = "O Campo nao pode esta vazio")
 	private String descricao;
 	@Positive
 	private Integer qtdEstoque;

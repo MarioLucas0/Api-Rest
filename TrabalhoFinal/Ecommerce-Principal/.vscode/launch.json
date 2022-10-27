@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-EcommerceApplication<mlecommerce>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.serratec.ecommerce.ecommerce.EcommerceApplication",
+      "projectName": "mlecommerce",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
