@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.serratec.ecommerce.ecommerce.config.MailConfig;
 import com.serratec.ecommerce.ecommerce.dto.ClienteDTO;
 import com.serratec.ecommerce.ecommerce.dto.ClienteInserirDTO;
 import com.serratec.ecommerce.ecommerce.dto.ClienteListDTO;
@@ -29,8 +28,10 @@ public class ClienteService {
   @Autowired
   private EnderecoService enderecoService;
 
-  @Autowired
-  private MailConfig mailConfig;
+  /*
+   * @Autowired
+   * private MailConfig mailConfig;
+   */
 
   public List<ClienteListDTO> listar() {
     List<Cliente> clientes = clienteRepository.findAll();
@@ -121,8 +122,11 @@ public class ClienteService {
     novoCliente = clienteRepository.save(novoCliente);
 
     // Enviando Email para notificar a mudança no cadastro
-    mailConfig.sendEmail(clienteInserirDTO.getEmail(), "Atualização de cadastro de Usuário",
-        novoCliente.toString());
+    /*
+     * mailConfig.sendEmail(clienteInserirDTO.getEmail(),
+     * "Atualização de cadastro de Usuário",
+     * novoCliente.toString());
+     */
 
     return new ClienteDTO(novoCliente);
   }

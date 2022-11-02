@@ -11,10 +11,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.serratec.ecommerce.ecommerce.config.MailConfig;
 import com.serratec.ecommerce.ecommerce.dto.ItemPedidoDTO;
 import com.serratec.ecommerce.ecommerce.dto.PedidoDTO;
-import com.serratec.ecommerce.ecommerce.dto.RelatorioDTO;
 import com.serratec.ecommerce.ecommerce.model.Cliente;
 import com.serratec.ecommerce.ecommerce.model.ItemPedido;
 import com.serratec.ecommerce.ecommerce.model.Pedido;
@@ -42,9 +40,6 @@ public class PedidoService {
 
   @Autowired
   private ProdutoRepository produtoRepository;
-
-  @Autowired
-  private MailConfig mailConfig;
 
   public PedidoDTO findById(Long id) {
 
@@ -105,9 +100,11 @@ public class PedidoService {
     pedidoRepository.save(pedido);
     itemPedidoRepository.saveAll(pedido.getItems());
 
-    RelatorioDTO relatorio = new RelatorioDTO(pedido);
-    mailConfig.sendEmail(cliente.getEmail(), "Dados do Pedido",
-        relatorio.toString());
+    /* RelatorioDTO relatorio = new RelatorioDTO(pedido); */
+    /*
+     * mailConfig.sendEmail(cliente.getEmail(), "Dados do Pedido",
+     * relatorio.toString());
+     */
 
     return new PedidoDTO(pedido);
   }
