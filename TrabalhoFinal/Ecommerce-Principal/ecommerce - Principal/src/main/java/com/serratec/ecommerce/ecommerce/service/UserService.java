@@ -1,4 +1,4 @@
-
+/* 
 package com.serratec.ecommerce.ecommerce.service;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class UserService {
       userAtualizado.setUsuarioNome(user.getUsuarioNome());
       return userRepository.save(userAtualizado);
     } else {
-      return null;
+      return null; 
     }
   }
 
@@ -53,3 +53,4 @@ public class UserService {
     }
   }
 }
+ */
